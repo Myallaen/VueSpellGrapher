@@ -26,7 +26,6 @@ export default {
     computePairs(nbElements, values) {
       const nbPoints = nbElements * 2 + 1;
       const encoder = 1 << (nbPoints - 1);
-      console.log(encoder);
       let element = 0;
 
       let pairs = [];
@@ -37,7 +36,6 @@ export default {
           let a = value << 32 - i;
           let b = a >> 31;
           if (b) {
-            console.log(i, value, key, this.modulo(i, nbPoints), this.modulo(i + key, nbPoints))
             pairs.push([
               this.modulo(i - key, nbPoints),
               this.modulo((i + key), nbPoints) - key

@@ -6,34 +6,54 @@
 import SpellComputer from "@/components/SpellComputer.vue";
 export default {
   name: "CanvasGrapher",
+  data() {
+    return {
+      options: []
+    }
+  },
   methods: {
-    update(nbElements, values) {
-      const ctx = document.getElementById("graph").getContext("2d");
-      ctx.clearRect(0,0,500,500);
+    update(nbElements, values, options) {
+      this.options = options;
+
+      this.ctx = document.getElementById("graph").getContext("2d");
+      this.ctx.clearRect(0,0,500,500);
       const points = SpellComputer.methods.computePoints(nbElements);
       const pairs = SpellComputer.methods.computePairs(nbElements, values);
-      console.log(points);
-      console.log(pairs);
-      this.graph(ctx, 'white', 5, points, pairs);
-      this.graph(ctx, 'black', 3, points, pairs);
+
+      this.graph( points, pairs);
     },
-    graph(ctx, color, lineWidth, points, pairs) {
-      ctx.lineWidth = lineWidth;
-      ctx.fillStyle = color;
-      ctx.strokeStyle = color;
-      points.forEach((point) => {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
-        ctx.fill();
-      })
-      pairs.forEach((pair) => {
-        const point1 = points[pair[0]];
-        const point2 = points[pair[1]];
-        ctx.beginPath();
-        ctx.moveTo(point1.x, point1.y);
-        ctx.lineTo(point2.x, point2.y)
-        ctx.stroke();
-      })
+    setColor(color) {
+      this.ctx.fillStyle = color;
+      this.ctx.strokeStyle = color;
+    },
+    graph(points, pairs) {
+      this.ctx.lineWidth = this.options.lineWidth ?? 3;
+
+      if (this.options.drawCircle) {
+        this.setColor(this.options.circleColor ?? 'black')
+        this.ctx.beginPath();
+        this.ctx.arc(250, 250, 200, 0, 2 * Math.PI);
+        this.ctx.stroke();
+      }
+      if (this.options.drawPoints) {
+        this.setColor(this.options.pointsColor ?? 'black')
+        points.forEach((point) => {
+          this.ctx.beginPath();
+          this.ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+          this.ctx.fill();
+        })
+      }
+      if (this.options.drawLines) {
+        this.setColor(this.options.linesColor ?? 'black')
+        pairs.forEach((pair) => {
+          const point1 = points[pair[0]];
+          const point2 = points[pair[1]];
+          this.ctx.beginPath();
+          this.ctx.moveTo(point1.x, point1.y);
+          this.ctx.lineTo(point2.x, point2.y)
+          this.ctx.stroke();
+        })
+      }
     }
   }
 }
@@ -41,4 +61,4 @@ export default {
 
 <style scoped>
 
-</style>
+</style>0

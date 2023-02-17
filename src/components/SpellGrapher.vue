@@ -5,6 +5,21 @@
     <select v-model="damage"><option v-for="object in Damages" :value="object.value">{{ object.name }}</option></select>
     <select v-model="target"><option v-for="object in Targets" :value="object.value">{{ object.name }}</option></select>
     <select v-model="range"><option v-for="object in Ranges" :value="object.value">{{ object.name }}</option></select>
+    <br/>
+    <label>Draw Circle :</label>
+    <input type="checkbox" v-model="drawCircle" :true-value="true" :false-value="false">
+    <label>Color :</label>
+    <input v-model="circleColor">
+    <br/>
+    <label>Draw Points :</label>
+    <input type="checkbox" v-model="drawPoints" :true-value="true" :false-value="false">
+    <label>Color :</label>
+    <input v-model="pointsColor">
+    <br/>
+    <label>Draw Lines :</label>
+    <input type="checkbox" v-model="drawLines" :true-value="true" :false-value="false">
+    <label>Color :</label>
+    <input v-model="linesColor">
   </form>
   <CanvasGrapher />
 </template>
@@ -14,7 +29,6 @@ import CanvasGrapher from "@/components/CanvasGrapher.vue";
 export default {
   name: 'SpellGrapher',
   components: {CanvasGrapher},
-
   data() {
     return {
       nbElements: 5,
@@ -23,6 +37,12 @@ export default {
       damage: 0,
       target: 0,
       range: 0,
+      drawCircle: true,
+      circleColor: 'black',
+      drawPoints: false,
+      pointsColor: 'black',
+      drawLines: true,
+      linesColor: 'black',
       Levels: [
         {'name':  'Cantrip', 'value': 0}, {'name':  'Level 1', 'value': 1}, {'name':  'Level 2', 'value': 2},
         {'name':  'Level 3', 'value': 3}, {'name':  'Level 4', 'value': 4}, {'name':  'Level 5', 'value': 5},
@@ -61,7 +81,15 @@ export default {
   },
   methods: {
     updateGraph() {
-      CanvasGrapher.methods.update(this.nbElements, [this.level, this.school, this.damage, this.target, this.range]);
+      CanvasGrapher.methods.update(
+          this.nbElements,
+          [this.level, this.school, this.damage, this.target, this.range],
+          {
+            drawCircle: this.drawCircle, circleColor: this.circleColor,
+            drawPoints: this.drawPoints, pointsColor: this.pointsColor,
+            drawLines: this.drawLines, linesColor: this.linesColor
+          }
+      );
     }
   },
   mounted() {
