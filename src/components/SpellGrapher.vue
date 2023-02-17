@@ -1,4 +1,4 @@
-<template xmlns:v-if="http://www.w3.org/1999/html">
+<template>
   <form @change.prevent="updateGraph">
     <select v-model="level"><option v-for="object in Levels" :value="object.value">{{ object.name }}</option></select>
     <select v-model="school"><option v-for="object in Schools" :value="object.value">{{ object.name }}</option></select>
@@ -10,16 +10,22 @@
     <input type="checkbox" v-model="drawCircle" :true-value="true" :false-value="false">
     <label>Color :</label>
     <input v-model="circleColor">
+    <label>Width :</label>
+    <input type="number" min="1" max="10" v-model="circleWidth">
     <br/>
     <label>Draw Points :</label>
     <input type="checkbox" v-model="drawPoints" :true-value="true" :false-value="false">
     <label>Color :</label>
     <input v-model="pointsColor">
+    <label>Width :</label>
+    <input type="number" min="1" max="10" v-model="pointsWidth">
     <br/>
     <label>Draw Lines :</label>
     <input type="checkbox" v-model="drawLines" :true-value="true" :false-value="false">
     <label>Color :</label>
     <input v-model="linesColor">
+    <label>Width :</label>
+    <input type="number" min="1" max="10" v-model="linesWidth">
   </form>
   <CanvasGrapher />
 </template>
@@ -38,11 +44,14 @@ export default {
       target: 0,
       range: 0,
       drawCircle: true,
-      circleColor: 'black',
+      circleColor: 'white',
+      circleWidth: 3,
       drawPoints: false,
-      pointsColor: 'black',
+      pointsColor: 'white',
+      pointsWidth: 5,
       drawLines: true,
-      linesColor: 'black',
+      linesColor: 'white',
+      linesWidth: 3,
       Levels: [
         {'name':  'Cantrip', 'value': 0}, {'name':  'Level 1', 'value': 1}, {'name':  'Level 2', 'value': 2},
         {'name':  'Level 3', 'value': 3}, {'name':  'Level 4', 'value': 4}, {'name':  'Level 5', 'value': 5},
@@ -85,9 +94,9 @@ export default {
           this.nbElements,
           [this.level, this.school, this.damage, this.target, this.range],
           {
-            drawCircle: this.drawCircle, circleColor: this.circleColor,
-            drawPoints: this.drawPoints, pointsColor: this.pointsColor,
-            drawLines: this.drawLines, linesColor: this.linesColor
+            drawCircle: this.drawCircle, circleColor: this.circleColor, circleWidth: this.circleWidth,
+            drawPoints: this.drawPoints, pointsColor: this.pointsColor, pointsWidth: this.pointsWidth,
+            drawLines: this.drawLines, linesColor: this.linesColor, linesWidth: this.linesWidth,
           }
       );
     }
