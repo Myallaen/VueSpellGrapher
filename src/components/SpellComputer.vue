@@ -26,26 +26,25 @@ export default {
     computePairs(nbElements, values) {
       const nbPoints = nbElements * 2 + 1;
       const encoder = 1 << (nbPoints - 1);
-      let element = 0;
+      let element = 1;
 
       let pairs = [];
-      for (let key = 1; key <= values.length; key++) {
-        let value = values[key- 1] + encoder;
-
+      values.map((value) => {
+        value += encoder;
         for (let i = 1; i <= 32; i++) {
           let a = value << 32 - i;
           let b = a >> 31;
           if (b) {
             pairs.push([
-              this.modulo(i - key, nbPoints),
-              this.modulo((i + key), nbPoints) - key
+              this.modulo(i - element, nbPoints),
+              this.modulo((i + element), nbPoints) - element
             ]);
           }
         }
         element++;
-      }
-
+      })
       return pairs;
+
     },
     modulo(a, b) {
       return (a + b) % b;

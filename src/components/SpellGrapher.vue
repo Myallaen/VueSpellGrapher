@@ -3,7 +3,7 @@
     <select v-model="level"><option v-for="object in Levels" :value="object.value">{{ object.name }}</option></select>
     <select v-model="school"><option v-for="object in Schools" :value="object.value">{{ object.name }}</option></select>
     <select v-model="damage"><option v-for="object in Damages" :value="object.value">{{ object.name }}</option></select>
-    <select v-model="target"><option v-for="object in Targets" :value="object.value">{{ object.name }}</option></select>
+    <select v-model="area"><option v-for="object in Area" :value="object.value">{{ object.name }}</option></select>
     <select v-model="range"><option v-for="object in Ranges" :value="object.value">{{ object.name }}</option></select>
     <br/>
     <label>Draw Circle :</label>
@@ -41,7 +41,7 @@ export default {
       level:0,
       school:0,
       damage: 0,
-      target: 0,
+      area: 0,
       range: 0,
       drawCircle: true,
       circleColor: 'white',
@@ -69,22 +69,61 @@ export default {
         {'name':  'Transmutation', 'value': 7}
       ],
       Damages: [
-        {'name':  'None', 'value': 0}, {'name':  'Acid', 'value': 1}, {'name':  'Bludgeoning', 'value': 2},
-        {'name':  'Cold', 'value': 3}, {'name':  'Fire', 'value': 4}, {'name':  'Force', 'value': 5},
-        {'name':  'Lightning', 'value': 6}, {'name':  'Necrotic', 'value': 7}, {'name':  'Piercing', 'value': 8},
-        {'name':  'Poison', 'value': 9}, {'name':  'Psychic', 'value': 10}, {'name':  'Radiant', 'value': 11},
-        {'name':  'Slashing', 'value': 12}, {'name':  'Thunder', 'value': 13}
+        {'name':  'Acid', 'value': 0}, {'name':  'Bludgeoning', 'value': 1}, {'name':  'Cold', 'value': 2},
+        {'name':  'Damage', 'value': 3}, {'name':  'Extra', 'value': 4}, {'name':  'Fire', 'value': 5},
+        {'name':  'Force', 'value': 6}, {'name':  'Lightning', 'value': 6}, {'name':  'Necrotic', 'value': 7},
+        {'name':  'Non-magical', 'value': 8}, {'name':  'Piercing', 'value': 9}, {'name':  'Poison', 'value': 10},
+        {'name':  'Psychic', 'value': 11}, {'name':  'Radiant', 'value': 12}, {'name':  'Slashing', 'value': 13},
+        {'name':  'Thunder', 'value': 14}
       ],
-      Targets: [
-        {'name':  'Single Target', 'value': 0}, {'name':  'Multiple Targets', 'value': 1},
-        {'name':  'Wall 30ft long 10 ft high', 'value': 2}, {'name':  '15 ft radius Sphere', 'value': 3},
-        {'name':  '15 ft radius Cylinder', 'value': 4}, {'name':  '30 ft Cone', 'value': 5},
-        {'name':  '60 ft Line', 'value': 6}, {'name':  '15 ft Cube', 'value': 7},
-        {'name':  '30 ft Square', 'value': 8}, {'name':  '15 ft Circle', 'value': 9}
+      Area: [
+        {'name':  'Circle', 'value': 0},
+        {'name':  'Cone/Sphere', 'value': 1},
+        {'name':  'Cone', 'value': 2},
+        {'name':  'Cube', 'value': 3},
+        {'name':  'Cylinder', 'value': 4},
+        {'name':  'Line', 'value': 5},
+        {'name':  'Multiple-Targets/Sphere', 'value': 6},
+        {'name':  'Multiple-Targets', 'value': 7},
+        {'name':  'None', 'value': 8},
+        {'name':  'Single-Target/Cone', 'value': 9},
+        {'name':  'Single-Target/Cube', 'value': 10},
+        {'name':  'Single-Target/Multiple-Targets', 'value': 11},
+        {'name':  'Single-Target/Sphere', 'value': 12},
+        {'name':  'Single-Target/Wall', 'value': 13},
+        {'name':  'Single-Target', 'value': 14},
+        {'name':  'Sphere/Cylinder', 'value': 15},
+        {'name':  'Sphere', 'value': 16},
+        {'name':  'Square', 'value': 17},
+        {'name':  'Wall', 'value': 18},
       ],
       Ranges: [
-        {'name':  'Touch', 'value': 0}, {'name':  '30 ft', 'value': 1}, {'name':  '60 ft', 'value': 2},
-        {'name':  '90 ft', 'value': 3}, {'name':  '120 ft', 'value': 4}, {'name':  '300 ft', 'value': 5}
+        {'name':  '10-feet radius', 'value': 0},
+        {'name':  '100-feet line', 'value': 1},
+        {'name':  '15-feet cone', 'value': 2},
+        {'name':  '15-feet cube', 'value': 3},
+        {'name':  '15-feet radius', 'value': 4},
+        {'name':  '30-feet cone', 'value': 5},
+        {'name':  '30-feet line', 'value': 6},
+        {'name':  '30-feet radius', 'value': 7},
+        {'name':  '5-feet radius', 'value': 8},
+        {'name':  '60-feet cone', 'value': 9},
+        {'name':  '60-feet line', 'value': 10},
+        {'name':  'Point (1 miles)', 'value': 11},
+        {'name':  'Point (10 feet)', 'value': 12},
+        {'name':  'Point (1000 feet)', 'value': 13},
+        {'name':  'Point (120 feet)', 'value': 14},
+        {'name':  'Point (150 feet)', 'value': 15},
+        {'name':  'Point (30 feet)', 'value': 16},
+        {'name':  'Point (300 feet)', 'value': 17},
+        {'name':  'Point (5 feet)', 'value': 18},
+        {'name':  'Point (500 feet)', 'value': 19},
+        {'name':  'Point (60 feet)', 'value': 20},
+        {'name':  'Point (90 feet)', 'value': 21},
+        {'name':  'Self', 'value': 22},
+        {'name':  'Sight', 'value': 23},
+        {'name':  'Special', 'value': 24},
+        {'name':  'Touch', 'value': 25}
       ]
     }
   },
@@ -92,7 +131,7 @@ export default {
     updateGraph() {
       CanvasGrapher.methods.update(
           this.nbElements,
-          [this.level, this.school, this.damage, this.target, this.range],
+          [this.level, this.school, this.damage, this.area, this.range],
           {
             drawCircle: this.drawCircle, circleColor: this.circleColor, circleWidth: this.circleWidth,
             drawPoints: this.drawPoints, pointsColor: this.pointsColor, pointsWidth: this.pointsWidth,
