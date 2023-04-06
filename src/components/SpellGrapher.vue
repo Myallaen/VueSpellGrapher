@@ -48,7 +48,7 @@ export default {
       damage: 0,
       area: 0,
       range: 0,
-      levelColor: 'black',
+      levelColor: 'white',
       schoolColor: 'blue',
       damageColor: 'green',
       areaColor: 'red',
