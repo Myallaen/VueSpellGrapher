@@ -6,6 +6,12 @@
     <select v-model="area"><option v-for="object in Area" :value="object.value">{{ object.name }}</option></select>
     <select v-model="range"><option v-for="object in Ranges" :value="object.value">{{ object.name }}</option></select>
     <br/>
+    <input v-model="levelColor">
+    <input v-model="schoolColor">
+    <input v-model="damageColor">
+    <input v-model="areaColor">
+    <input v-model="rangeColor">
+    <br/>
     <label>Draw Circle :</label>
     <input type="checkbox" v-model="drawCircle" :true-value="true" :false-value="false">
     <label>Color :</label>
@@ -20,10 +26,9 @@
     <label>Width :</label>
     <input type="number" min="1" max="10" v-model="pointsWidth">
     <br/>
-    <label>Draw Lines :</label>
-    <input type="checkbox" v-model="drawLines" :true-value="true" :false-value="false">
-    <label>Color :</label>
-    <input v-model="linesColor">
+    <label>Lines Type:</label>
+    <select v-model="lineType"><option v-for="object in lineTypes" :value="object.value">{{ object.name }}</option></select>
+    <input v-if="lineType === 'non-center'" type="number" min="0" max="10" v-model="nonCenterOffset">
     <label>Width :</label>
     <input type="number" min="1" max="10" v-model="linesWidth">
   </form>
@@ -43,20 +48,26 @@ export default {
       damage: 0,
       area: 0,
       range: 0,
-      drawCircle: true,
+      levelColor: 'black',
+      schoolColor: 'blue',
+      damageColor: 'green',
+      areaColor: 'red',
+      rangeColor: 'orange',
+      drawCircle: false,
       circleColor: 'white',
       circleWidth: 3,
       drawPoints: false,
       pointsColor: 'white',
       pointsWidth: 5,
-      drawLines: true,
-      linesColor: 'white',
+      lineType: 'straight',
+      nonCenterOffset: 0.1,
       linesWidth: 3,
+      lineTypes: [{'name': 'Straight', 'value': 'straight'}, {'name': 'Centered Circle', 'value': 'center'}, {'name': 'Non-Centered Circle', 'value': 'non-center'}],
       Levels: [
-        {'name':  'Cantrip', 'value': 0}, {'name':  'Level 1', 'value': 1}, {'name':  'Level 2', 'value': 2},
-        {'name':  'Level 3', 'value': 3}, {'name':  'Level 4', 'value': 4}, {'name':  'Level 5', 'value': 5},
-        {'name':  'Level 6', 'value': 6}, {'name':  'Level 7', 'value': 7}, {'name':  'Level 8', 'value': 8},
-        {'name':  'Level 9', 'value': 9}
+        {'name': 'Cantrip', 'value': 0}, {'name': 'Level 1', 'value': 1}, {'name': 'Level 2', 'value': 2},
+        {'name': 'Level 3', 'value': 3}, {'name': 'Level 4', 'value': 4}, {'name': 'Level 5', 'value': 5},
+        {'name': 'Level 6', 'value': 6}, {'name': 'Level 7', 'value': 7}, {'name': 'Level 8', 'value': 8},
+        {'name': 'Level 9', 'value': 9}
       ],
       Schools: [
         {'name':  'Abjuration', 'value': 0},
@@ -135,7 +146,8 @@ export default {
           {
             drawCircle: this.drawCircle, circleColor: this.circleColor, circleWidth: this.circleWidth,
             drawPoints: this.drawPoints, pointsColor: this.pointsColor, pointsWidth: this.pointsWidth,
-            drawLines: this.drawLines, linesColor: this.linesColor, linesWidth: this.linesWidth,
+            linesColor: [this.levelColor, this.schoolColor, this.damageColor, this.areaColor, this.rangeColor],
+            linesWidth: this.linesWidth, lineType: this.lineType, offset: this.nonCenterOffset
           }
       );
     }
