@@ -21,8 +21,9 @@ export default {
     update(nbElements, values, options) {
       this.options = options;
       this.ctx.clearRect(-250, -250, 500, 500);
-      const points = SpellComputer.methods.computePoints(nbElements);
+      const points = SpellComputer.methods.computePoints(nbElements, this.options.baseType);
       const pairs = SpellComputer.methods.computePairs(nbElements, values);
+      console.log(pairs);
 
       this.graph( points, pairs);
     },
@@ -32,14 +33,13 @@ export default {
       this.ctx.lineWidth = width;
     },
     graph(points, pairs) {
-      this.ctx.lineCap = "round";
-      if (this.options.drawCircle) {
-        this.setLine(this.options.circleColor ?? 'black', this.options.circleWidth ?? 3)
+      if (this.options.baseDraw) {
+        this.setLine(this.options.baseColor ?? 'black', this.options.baseWidth ?? 3)
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 200, 0, 2 * Math.PI);
         this.ctx.stroke();
       }
-      if (this.options.drawPoints) {
+      if (this.options.pointsDraw) {
         this.setLine(this.options.pointsColor ?? 'black', 1)
         points.forEach((point) => {
           this.ctx.beginPath();
@@ -47,24 +47,26 @@ export default {
           this.ctx.fill();
         })
       }
-      pairs.forEach((pair) => {
-        const point1 = points[pair[0]];
-        const point2 = points[pair[1]];
-        const mod = (pair[1] - pair[0] + 11) % 11 - 1;
-        this.setLine(this.options.linesColor[mod] ?? 'black', this.options.linesWidth ?? 3);
+      if (this.options.linesDraw) {
+        pairs.forEach((pair) => {
+          const point1 = points[pair[0]];
+          const point2 = points[pair[1]];
+          const mod = (pair[1] - pair[0] + 11) % 11 - 1;
+          this.setLine(this.options.linesColor[mod] ?? 'black', this.options.linesWidth ?? 3);
 
-        switch (this.options.lineType) {
-          case 'center':
-            this.graphCenterLines(point1, point2);
-            break;
-          case 'non-center':
-            this.graphNonCenterLines(point1, point2, this.options.linesColor[mod]);
-            break;
-          case 'straight':
-          default:
-            this.graphStraitLines(point1, point2);
-        }
-      })
+          switch (this.options.lineType) {
+            case 'center':
+              this.graphCenterLines(point1, point2);
+              break;
+            case 'non-center':
+              this.graphNonCenterLines(point1, point2, this.options.linesColor[mod]);
+              break;
+            case 'straight':
+            default:
+              this.graphStraitLines(point1, point2);
+          }
+        })
+      }
     },
     graphStraitLines(point1, point2) {
       this.ctx.beginPath();
@@ -79,8 +81,30 @@ export default {
       const T0 = Math.atan((point1.y - b)/(point1.x - a));
       const T1 = Math.atan((point2.y - b)/(point2.x - a));
 
+      let condition = false;
+      switch (this.options.parametricCondition) {
+        default:
+        case 'x':
+          condition = point1.x <= point2.x;
+          break;
+        case 'y':
+          condition = point1.y <= point2.y;
+          break;
+        case 'reverse-x':
+          condition = point1.x >= point2.x;
+          break;
+        case 'reverse-y':
+          condition = point1.y >= point2.y;
+          break;
+        case 'force-positive':
+          condition = true;
+          break;
+        case 'force-negative':
+          condition = false;
+          break;
+      }
       this.ctx.beginPath();
-      if (point1.x <= point2.x) {
+      if (condition) {
         this.ctx.arc(a, b, r, T1 + Math.PI, T0);
       } else {
         this.ctx.arc(a, b, r, T0, T1 + Math.PI);

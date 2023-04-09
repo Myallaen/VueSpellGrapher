@@ -12,22 +12,25 @@
     <input v-model="areaColor">
     <input v-model="rangeColor">
     <br/>
-    <label>Draw Circle :</label>
-    <input type="checkbox" v-model="drawCircle" :true-value="true" :false-value="false">
+    <label>Base Draw :</label>
+    <input type="checkbox" v-model="baseDraw" :true-value="true" :false-value="false">
+    <label>Type :</label>
+    <select v-model="baseType"><option v-for="(object, i) in baseTypes" :value="i">{{ object.name }}</option></select>
     <label>Color :</label>
-    <input v-model="circleColor">
+    <input v-model="baseColor">
     <label>Width :</label>
-    <input type="number" min="1" max="10" v-model="circleWidth">
+    <input type="number" min="1" max="10" v-model="baseWidth">
     <br/>
-    <label>Draw Points :</label>
-    <input type="checkbox" v-model="drawPoints" :true-value="true" :false-value="false">
+    <label>Points Draw :</label>
+    <input type="checkbox" v-model="pointsDraw" :true-value="true" :false-value="false">
     <label>Color :</label>
     <input v-model="pointsColor">
     <label>Width :</label>
     <input type="number" min="1" max="10" v-model="pointsWidth">
     <br/>
-    <label>Lines Type:</label>
+    <label>Lines Type : </label>
     <select v-model="lineType"><option v-for="object in lineTypes" :value="object.value">{{ object.name }}</option></select>
+    <select v-if="lineType !== 'straight'" v-model="parametricCondition"><option v-for="object in parametricConditions" :value="object.value">{{ object.name }}</option></select>
     <input v-if="lineType === 'non-center'" type="number" min="0" max="2" step="0.1" v-model="nonCenterOffset">
     <label>Width :</label>
     <input type="number" min="1" max="10" v-model="linesWidth">
@@ -42,6 +45,7 @@ export default {
   components: {CanvasGrapher},
   data() {
     return {
+      i: 0,
       nbElements: 5,
       level:0,
       school:0,
@@ -53,16 +57,41 @@ export default {
       damageColor: 'green',
       areaColor: 'red',
       rangeColor: 'orange',
-      drawCircle: false,
-      circleColor: 'white',
-      circleWidth: 3,
-      drawPoints: false,
+      baseDraw: false,
+      baseType: 4,
+      baseColor: 'white',
+      baseWidth: 3,
+      pointsDraw: true,
       pointsColor: 'white',
       pointsWidth: 5,
       lineType: 'straight',
       nonCenterOffset: 0.1,
       linesWidth: 3,
-      lineTypes: [{'name': 'Straight', 'value': 'straight'}, {'name': 'Centered Circle', 'value': 'center'}, {'name': 'Non-Centered Circle', 'value': 'non-center'}],
+      parametricCondition: 'x',
+      baseTypes: [
+        {'name': 'Horizontal', 'value': 'line1', 'parametricCondition': 'force-positive'},
+        {'name': 'Vertical', 'value': 'line2', 'parametricCondition': 'x'},
+        {'name': 'Diagonal 1', 'value': 'diag1', 'parametricCondition': 'x'},
+        {'name': 'Diagonal 2', 'value': 'diag2', 'parametricCondition': 'x'},
+        {'name': 'Circle', 'value': 'circle', 'parametricCondition': 'x'},
+        {'name': 'Half Circle 1', 'value': 'halfCircle1', 'parametricCondition': 'x'},
+        {'name': 'Half Circle 2', 'value': 'halfCircle2', 'parametricCondition': 'x'},
+        {'name': 'Half Circle 3', 'value': 'halfCircle3', 'parametricCondition': 'x'},
+        {'name': 'Half Circle 4', 'value': 'halfCircle4', 'parametricCondition': 'x'},
+        {'name': 'Quarter Circle 1', 'value': 'quartCircle1', 'parametricCondition': 'x'},
+        {'name': 'Quarter Circle 2', 'value': 'quartCircle2', 'parametricCondition': 'x'},
+        {'name': 'Quarter Circle 3', 'value': 'quartCircle3', 'parametricCondition': 'x'},
+        {'name': 'Quarter Circle 4', 'value': 'quartCircle4', 'parametricCondition': 'x'},
+      ],
+      lineTypes: [
+        {'name': 'Straight', 'value': 'straight'}, {'name': 'Centered Circle', 'value': 'center'},
+        {'name': 'Non-Centered Circle', 'value': 'non-center'}
+      ],
+      parametricConditions: [
+        {'name': 'x-axis', 'value': 'x'}, {'name': 'reverse x-axis', 'value': 'reverse-x'},
+        {'name': 'y-axis', 'value': 'y'}, {'name': 'reverse y-axis', 'value': 'reverse-y'},
+        {'name': 'positive', 'value': 'force-positive'}, {'name': 'negative', 'value': 'force-negative'}
+      ],
       Levels: [
         {'name': 'Cantrip', 'value': 0}, {'name': 'Level 1', 'value': 1}, {'name': 'Level 2', 'value': 2},
         {'name': 'Level 3', 'value': 3}, {'name': 'Level 4', 'value': 4}, {'name': 'Level 5', 'value': 5},
@@ -127,10 +156,10 @@ export default {
           this.nbElements,
           [this.level, this.school, this.damage, this.area, this.range],
           {
-            drawCircle: this.drawCircle, circleColor: this.circleColor, circleWidth: this.circleWidth,
-            drawPoints: this.drawPoints, pointsColor: this.pointsColor, pointsWidth: this.pointsWidth,
-            linesColor: [this.levelColor, this.schoolColor, this.damageColor, this.areaColor, this.rangeColor],
-            linesWidth: this.linesWidth, lineType: this.lineType, offset: this.nonCenterOffset
+            baseDraw: this.baseDraw, baseType: this.baseTypes[this.baseType], baseColor: this.baseColor, baseWidth: this.baseWidth,
+            pointsDraw: this.pointsDraw, pointsColor: this.pointsColor, pointsWidth: this.pointsWidth,
+            linesDraw: true, linesColor: [this.levelColor, this.schoolColor, this.damageColor, this.areaColor, this.rangeColor],
+            linesWidth: this.linesWidth, lineType: this.lineType, offset: this.nonCenterOffset, parametricCondition: this.parametricCondition
           }
       );
     }
